@@ -1,0 +1,22 @@
+a,
+.btn-link {
+  color: darkred;
+  /* color: #1449af; */
+  text-decoration: none;
+}
+
+a:hover,
+.btn-link:hover {
+  color: red;
+}
+
+.dark a,
+.dark btn-link,
+.dark input.btn-link {
+  color: #dc2222bd;
+}
+
+.dark a:hover,
+.dark .btn-link:hover {
+  color: #ff2727;
+}

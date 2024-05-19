@@ -1,0 +1,22 @@
+{{with .Data}}
+{{template "header.tmpl" (WithContext .CommonData $.Ctx)}}
+
+<h1>bloat</h1>
+<p>A web client for <a href="https://pleroma.social" target="_blank">Mastadon Network</a>.</p>
+<form action="/signin" method="post">
+	<div class="form-field-s">
+		<label for="instance">Enter the domain name of your instance to continue</label>
+	</div>
+	<div class="form-field-s">
+		<input id="instance" type="text" class="input-w" name="instance" placeholder="example.com" required>
+	</div>
+	<div class="form-field-s"><button type="submit">Signin</button></div>
+</form>
+<p>
+	See
+	<a href="https://git.freesoftwareextremist.com/bloat" target="_blank">git.freesoftwareextremist.com/bloat</a>
+	for more details.
+</P>
+
+{{template "footer.tmpl"}}
+{{end}}

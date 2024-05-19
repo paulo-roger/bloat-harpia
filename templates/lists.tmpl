@@ -1,0 +1,39 @@
+{{with .Data}}
+{{template "header.tmpl" (WithContext .CommonData $.Ctx)}}
+<h1>Lists</h1>
+
+{{if .Lists}}
+<table>
+	{{range .Lists}}
+	<tr>
+		<td><a href="/timeline/list?list={{.ID}}">{{.Title}} timeline</a></td>
+		<td>
+			<form action="/list/{{.ID}}" method="GET">
+				<button type="submit">Edit</button>
+			</form>
+		</td>
+		<td>
+			<form action="/list/{{.ID}}/remove" method="POST">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<button type="submit">Delete</button>
+			</form>
+		</td>
+	</tr>
+	{{end}}
+</table>
+{{else}}
+	<p>No lists added</p>
+{{end}}
+
+<h1>Add List</h1>
+<form action="/list" method="POST">
+	<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+	<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+	<label for="title">Title</label>
+	<input type="text" id="title" name="title" required>
+	<button type="submit"> Add </button>
+</form>
+
+{{template "footer.tmpl"}}
+{{end}}

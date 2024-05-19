@@ -1,0 +1,229 @@
+{{with .Data}}
+{{template "header.tmpl" (WithContext .CommonData $.Ctx)}}
+<h1>User</h1>
+
+<div class="user-info-container">
+	<div class="user-profile-img-container">
+		<a class="img-link" href="{{.User.Avatar}}" target="_blank">
+			<img class="user-profile-img" src="{{.User.Avatar}}" alt="@{{.User.Acct}}" height="96">
+		</a>
+	</div>
+	<div class="user-profile-details-container">
+		<div>
+			<bdi class="status-dname">{{EmojiFilter (HTML .User.DisplayName) .User.Emojis | Raw}}</bdi>
+			<span class="status-uname">@{{.User.Acct}}</span>
+			<a class="remote-link" href="{{.User.URL}}" target="_blank" title="remote profile">
+				source
+			</a>
+		</div>
+		{{if (ne $.Ctx.UserID .User.ID)}}
+		<div>
+			<span> {{if .User.Pleroma.Relationship.FollowedBy}} follows you - {{end}} </span>  
+			{{if .User.Pleroma.Relationship.BlockedBy}} blocks you - {{end}}
+			{{if .User.Pleroma.Relationship.Following}} 
+			<form class="d-inline" action="/unfollow/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="unfollow" class="btn-link">
+			</form>
+			{{else}}
+			<form class="d-inline" action="/follow/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="{{if .User.Pleroma.Relationship.Requested}}resend request{{else}}follow{{end}}" class="btn-link">
+			</form>
+			{{end}}
+			{{if .User.Pleroma.Relationship.Requested}}
+			-
+			<form class="d-inline" action="/unfollow/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="cancel request" class="btn-link">
+			</form>
+			{{end}}
+			-
+			{{if .User.Pleroma.Relationship.Subscribing}}
+			<form class="d-inline" action="/unsubscribe/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="unsubscribe" class="btn-link">
+			</form>
+			{{else}}
+			<form class="d-inline" action="/subscribe/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="subscribe" class="btn-link">
+			</form>
+			{{end}}
+		</div>
+		<div>
+			{{if .User.Pleroma.Relationship.Blocking}}
+			<form class="d-inline" action="/unblock/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="unblock" class="btn-link">
+			</form>
+			{{else}}
+			<form class="d-inline" action="/block/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="block" class="btn-link">
+			</form>
+			{{end}}
+			-
+			{{if .User.Pleroma.Relationship.Muting}}
+			<form class="d-inline" action="/unmute/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="unmute" class="btn-link">
+			</form>
+			{{else}}
+			<a href="/mute/{{.User.ID}}">mute</a>
+			{{end}}
+			{{if .User.Pleroma.Relationship.Following}} 
+			-
+			{{if .User.Pleroma.Relationship.ShowingReblogs}}
+			<form class="d-inline" action="/follow/{{.User.ID}}?reblogs=false" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="hide boosts" class="btn-link">
+			</form>
+			{{else}}
+			<form class="d-inline" action="/follow/{{.User.ID}}" method="post">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<input type="submit" value="show boosts" class="btn-link">
+			</form>
+			{{end}}
+			{{end}}
+		</div>
+		{{end}}
+		<div>
+			<a href="/user/{{.User.ID}}">statuses ({{.User.StatusesCount}})</a> -
+			<a href="/user/{{.User.ID}}/following">following ({{.User.FollowingCount}})</a> -
+			<a href="/user/{{.User.ID}}/followers">followers ({{.User.FollowersCount}})</a> -
+			<a href="/user/{{.User.ID}}/media">media</a>
+		</div>
+		{{if (eq $.Ctx.UserID .User.ID)}}
+		<div>
+			<a href="/user/{{.User.ID}}/bookmarks">bookmarks</a>
+			- <a href="/user/{{.User.ID}}/likes">likes</a>
+			- <a href="/user/{{.User.ID}}/mutes">mutes</a>
+			- <a href="/user/{{.User.ID}}/blocks">blocks</a>
+			{{if .User.Locked}}- <a href="/user/{{.User.ID}}/requests">requests (
+				{{- if .User.FollowRequestsCount}}{{.User.FollowRequestsCount}}{{else}}{{.User.Source.FollowRequestsCount}}{{end -}}
+			)</a>{{end}}
+		</div>
+		{{end}}
+		<div>
+			<a href="/usersearch/{{.User.ID}}">search statuses</a>
+			{{if (eq $.Ctx.UserID .User.ID)}} - <a href="/filters">filters</a> {{end}}
+		</div>
+	</div>
+	<div class="user-profile-description">
+	{{- EmojiFilter .User.Note .User.Emojis | Raw -}}
+	</div>
+	{{if .User.Fields}}
+	<div class="user-fields">
+		{{range .User.Fields}}
+		<div>{{- EmojiFilter (HTML .Name) $.Data.User.Emojis | Raw}} - {{EmojiFilter .Value $.Data.User.Emojis | Raw -}}</div>
+		{{end}}
+	</div>
+	{{end}}
+</div>
+
+{{if eq .Type ""}}
+<h1>Statuses</h1>
+{{range .Statuses}}
+{{template "status.tmpl" (WithContext . $.Ctx)}}
+{{else}}
+<p>No data found</p>
+{{end}}
+
+{{else if eq .Type "following"}}
+<h1>Following</h1>
+{{template "userlistfollow.tmpl" (WithContext .Users $.Ctx)}}
+
+{{else if eq .Type "followers"}}
+<h1>Followers</h1>
+{{template "userlistfollow.tmpl" (WithContext .Users $.Ctx)}}
+
+{{else if eq .Type "media"}}
+<h1>Statuses With Media</h1>
+{{range .Statuses}}
+{{template "status.tmpl" (WithContext . $.Ctx)}}
+{{else}}
+<p>No data found</p>
+{{end}}
+
+{{else if eq .Type "bookmarks"}}
+<h1>Bookmarks</h1>
+{{range .Statuses}}
+{{template "status.tmpl" (WithContext . $.Ctx)}}
+{{else}}
+<p>No data found</p>
+{{end}}
+
+{{else if eq .Type "likes"}}
+<h1>Likes</h1>
+{{range .Statuses}}
+{{template "status.tmpl" (WithContext . $.Ctx)}}
+{{else}}
+<p>No data found</p>
+{{end}}
+
+{{else if eq .Type "mutes"}}
+<h1>Mutes</h1>
+{{if .Users}}
+<table>
+{{range .Users}}
+	<tr>
+		<td> {{template "userlistitem.tmpl" (WithContext . $.Ctx)}} </td>
+		<td>
+			<form class="user-list-action" action="/unmute/{{.ID}}" method="POST">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<button type="submit">Unmute</button>
+			</form>
+		</td>
+	</tr>
+{{end}}
+</table>
+{{else}}
+<p>No data found</p>
+{{end}}
+
+{{else if eq .Type "blocks"}}
+<h1>Blocks</h1>
+{{if .Users}}
+<table>
+{{range .Users}}
+	<tr>
+		<td> {{template "userlistitem.tmpl" (WithContext . $.Ctx)}} </td>
+		<td>
+			<form class="user-list-action" action="/unblock/{{.ID}}" method="POST">
+				<input type="hidden" name="csrf_token" value="{{$.Ctx.CSRFToken}}">
+				<input type="hidden" name="referrer" value="{{$.Ctx.Referrer}}">
+				<button type="submit">Unblock</button>
+			</form>
+		</td>
+	</tr>
+{{end}}
+</table>
+{{else}}
+<p>No data found</p>
+{{end}}
+
+{{else if eq .Type "requests"}}
+<h1>Follow Requests</h1>
+{{template "requestlist.tmpl" (WithContext .Users $.Ctx)}}
+{{end}}
+
+<nav class="pagination">
+	{{if .NextLink}}
+		<a href="{{.NextLink}}">[next]</a>
+	{{end}}
+</nav>
+
+{{template "footer.tmpl"}}
+{{end}}

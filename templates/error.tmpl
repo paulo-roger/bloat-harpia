@@ -1,0 +1,17 @@
+{{with .Data}}
+{{template "header.tmpl" (WithContext .CommonData $.Ctx)}}
+<h1>Error</h1>
+
+<p>{{.Err}}</p>
+<div>
+	<a href="/timeline/home">home</a>
+	{{if .Retry}}
+	<a href="{{$.Ctx.Referrer}}">retry</a>
+	{{end}}
+	{{if .SessionErr}}
+	<a href="/signin" target="_top">signin</a>
+	{{end}}
+</div>
+
+{{template "footer.tmpl"}}
+{{end}}

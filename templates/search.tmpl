@@ -1,0 +1,40 @@
+{{with .Data}}
+{{template "header.tmpl" (WithContext .CommonData $.Ctx)}}
+<h1>Search</h1>
+
+<form action="/search" method="GET">
+	<p>
+		<label>
+			Query <input type="text" name="q" value="{{.Q}}">
+		</label>
+		<label>
+			Type
+			<select  name="type">
+				<option value="statuses" {{if eq .Type "statuses"}}selected{{end}}>Statuses</option>
+				<option value="accounts" {{if eq .Type "accounts"}}selected{{end}}>Accounts</option>
+			</select>
+		</label>
+		<button type="submit"> Search </button>
+	</p>
+</form>
+
+{{if eq .Type "statuses"}}
+{{range .Statuses}}
+{{template "status.tmpl" (WithContext . $.Ctx)}}
+{{else}}
+{{if .Q}}<p>No data found</p>{{end}}
+{{end}}
+{{end}}
+
+{{if eq .Type "accounts"}}
+{{template "userlist.tmpl" (WithContext .Users $.Ctx)}}
+{{end}}
+
+<nav class="pagination">
+	{{if .NextLink}}
+		<a href="{{.NextLink}}">[next]</a>
+	{{end}}
+</nav>
+
+{{template "footer.tmpl"}}
+{{end}}

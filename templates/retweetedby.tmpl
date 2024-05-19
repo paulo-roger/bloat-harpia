@@ -1,0 +1,8 @@
+{{with .Data}}
+{{template "header.tmpl" (WithContext .CommonData $.Ctx)}}
+<h1>Boosted By</h1>
+
+{{template "userlist.tmpl" (WithContext .Users $.Ctx)}}
+
+{{template "footer.tmpl"}}
+{{end}}

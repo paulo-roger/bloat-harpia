@@ -1,0 +1,38 @@
+bloat - A web client for Mastadon Network[1]
+
+Features:
+
+- Does not require JavaScript to display text, images, audio and videos.
+
+
+Requirements:
+
+- Go 1.11
+
+
+Building and Installation:
+
+Typing make will build the binary 
+$ make
+
+Edit the default config file. See the bloat.conf file for more details.
+$ ed bloat.conf
+
+Run the binary
+$ ./bloat
+
+You can now access the frontend at http://127.0.0.1:8080, which is the default
+listen address. See the INSTALL file for more details.
+
+
+License:
+
+To the extent possible under law, the author have dedicated all copyright and
+related and neighboring rights to this software to the public domain worldwide.
+This software is distributed without any warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication along with
+this software. If not, see http://creativecommons.org/publicdomain/zero/1.0/.
+
+
+[1] https://pleroma.social

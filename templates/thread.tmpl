@@ -1,0 +1,15 @@
+{{with $s := .Data}}
+{{template "header.tmpl" (WithContext .CommonData $.Ctx)}}
+<h1>Thread <a class="page-link" href="{{$.Ctx.Referrer}}" accesskey="T" title="Refresh (T)">refresh</a></h1>
+
+{{range .Statuses}}
+
+{{template "status.tmpl" (WithContext . $.Ctx)}}
+{{if $s.PostContext.ReplyContext}}{{if eq .ID $s.PostContext.ReplyContext.InReplyToID}}
+{{template "postform.tmpl" (WithContext $s.PostContext $.Ctx)}}
+{{end}}{{end}}
+
+{{end}}
+
+{{template "footer.tmpl"}}
+{{end}}
