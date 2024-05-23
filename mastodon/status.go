@@ -178,6 +178,16 @@ func (c *Client) GetTimelineHome(ctx context.Context, pg *Pagination) ([]*Status
 	return statuses, nil
 }
 
+// GetTimelineBubble return statuses from bubble timeline.
+func (c *Client) GetTimelineBubble(ctx context.Context, pg *Pagination) ([]*Status, error) {
+	var statuses []*Status
+	err := c.doAPI(ctx, http.MethodGet, "/api/v1/timelines/bubble", nil, &statuses, pg)
+	if err != nil {
+		return nil, err
+	}
+	return statuses, nil
+}
+
 // GetTimelinePublic return statuses from public timeline.
 func (c *Client) GetTimelinePublic(ctx context.Context, isLocal bool, instance string, pg *Pagination) ([]*Status, error) {
 	params := url.Values{}

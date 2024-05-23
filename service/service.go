@@ -141,6 +141,12 @@ func (s *service) TimelinePage(c *client, tType, instance, listId, maxID,
 			return err
 		}
 		title = "Timeline"
+	case "bubble":
+		statuses, err = c.GetTimelineBubble(c.ctx, &pg)
+		if err != nil {
+			return err
+		}
+		title = "Bubble Timeline"
 	case "direct":
 		statuses, err = c.GetTimelineDirect(c.ctx, &pg)
 		if err != nil {

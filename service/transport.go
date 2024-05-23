@@ -146,6 +146,11 @@ func NewHandler(s *service, verbose bool, staticDir string) http.Handler {
 		return nil
 	}, SESSION, HTML)
 
+	bubblePage := handle(func(c *client) error {
+		c.redirect("/timeline/bubble")
+		return nil
+	}, SESSION, HTML)
+
 	threadPage := handle(func(c *client) error {
 		id, _ := mux.Vars(c.r)["id"]
 		q := c.r.URL.Query()
@@ -742,6 +747,7 @@ func NewHandler(s *service, verbose bool, staticDir string) http.Handler {
 	r.HandleFunc("/signin", signinPage).Methods(http.MethodGet)
 	r.HandleFunc("/timeline/{type}", timelinePage).Methods(http.MethodGet)
 	r.HandleFunc("/timeline", defaultTimelinePage).Methods(http.MethodGet)
+	r.HandleFunc("/timeline/bubble", bubblePage).Methods(http.MethodGet)
 	r.HandleFunc("/thread/{id}", threadPage).Methods(http.MethodGet)
 	r.HandleFunc("/quickreply/{id}", quickReplyPage).Methods(http.MethodGet)
 	r.HandleFunc("/likedby/{id}", likedByPage).Methods(http.MethodGet)
