@@ -191,19 +191,24 @@ func (s *service) TimelinePage(c *client, tType, instance, listId, maxID,
 		}
 	}
 
-	if (len(maxID) > 0 || len(minID) > 0) && len(statuses) > 0 {
-		v := make(url.Values)
-		v.Set("min_id", statuses[0].ID)
-		if len(instance) > 0 {
-			v.Set("instance", instance)
+	if (len(maxID) > 0 || len(minID) > 10) {
+		if len(statuses) > 10 {
+			v := make(url.Values)
+			v.Set("min_id", statuses[0].ID)
+			if len(instance) > 0 {
+				v.Set("instance", instance)
+			}
+			if len(listId) > 0 {
+				v.Set("list", listId)
+			}
+			prevLink = "/timeline/" + tType + "?" + v.Encode()
+		} else {
+			prevLink = "/timeline/home"
 		}
-		if len(listId) > 0 {
-			v.Set("list", listId)
-		}
-		prevLink = "/timeline/" + tType + "?" + v.Encode()
 	}
 
-	if len(minID) > 0 || (len(pg.MaxID) > 0 && len(statuses) == 20) {
+	// if len(minID) > 0 || (len(pg.MaxID) > 0 && len(statuses) == 20) {
+	if len(minID) > 0 || len(pg.MaxID) > 0 {
 		v := make(url.Values)
 		v.Set("max_id", pg.MaxID)
 		if len(instance) > 0 {

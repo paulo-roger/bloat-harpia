@@ -3,6 +3,7 @@ GOFLAGS=-mod=vendor
 PREFIX=/usr/local
 BINPATH=$(PREFIX)/bin
 SHAREPATH=$(PREFIX)/share/bloat
+GO111MODULE=on
 
 TMPL=templates/*.tmpl
 SRC=main.go		\
